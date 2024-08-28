@@ -1,0 +1,41 @@
+name: Deploy to Digital Ocean Droplet
+
+on:
+  push:
+    branches:
+      - main  # Deploy on push to main branch
+
+jobs:
+  sftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # By default, npm build will fail on any eslint warnings
+      # when using Github's runner
+      - name: Set environment variables
+        run: echo "CI=false" >> $GITHUB_ENV
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.5.0'  
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy via SFTP
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.SERVER }}
+          username: ${{ secrets.USER }} 
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "./build/"  # Assuming the build directory is named 'build'
+          target: "/var/www/html/bauele.com"  # Directory on droplet
+          strip_components: 2  # This removes the initial /build/ folder
+          rm: true  # Remove existing files in the target directory
