@@ -1,0 +1,35 @@
+.hover-orb {
+  width: min-content;
+  height: 40px;
+}
+
+.hover-orb li {
+  position: relative;
+  top: -40px;
+
+  pointer-events: none;
+}
+
+.hover-orb div:hover {
+  filter: blur(1.2rem);
+}
+
+.hover-orb-background {
+  background: none;
+
+  height: 40px;
+  width: 60px;
+
+  left: 15%;
+  position: relative;
+  border-radius: 120px;
+  filter: blur(1.2rem);
+
+  transition: background 2s ease-in;
+  transition: background 2s ease-out;
+  animation: orb-pulse 1s ease-in-out 0s infinite alternate;
+}
+
+.hover-orb-background:hover {
+  background: var(--yellow);
+}
